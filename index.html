@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wandr</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0E0E0E">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Wandr">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.10.0/dist/tabler-icons.min.css">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0E0E0E;
+  --bg2:#181818;
+  --bg3:#222222;
+  --ink:#FFFFFF;
+  --ink2:#888888;
+  --ink3:#555555;
+  --acid:#C8F135;
+  --orange:#FF5C00;
+  --purple:#7B5CF5;
+  --border:rgba(255,255,255,0.07);
+  --border2:rgba(255,255,255,0.12);
+  --r:8px;
+  --r2:12px;
+}
+html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;-webkit-font-smoothing:antialiased}
+.app{display:flex;height:100vh;overflow:hidden}
+.sidebar{width:220px;min-width:220px;background:#000;display:flex;flex-direction:column;border-right:1px solid var(--border)}
+.main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
+
+/* Sidebar */
+.sb-logo{padding:22px 20px 20px;border-bottom:1px solid var(--border)}
+.sb-wordmark{font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--acid)}
+.sb-sub{font-size:11px;color:var(--ink3);margin-top:2px}
+.sb-nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:1px}
+.sb-section{font-size:9.5px;font-weight:700;color:var(--ink3);letter-spacing:1.2px;text-transform:uppercase;padding:14px 10px 5px}
+.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);cursor:pointer;color:var(--ink2);font-size:13px;transition:all 0.14s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
+.sb-item:hover{background:var(--bg3);color:var(--ink)}
+.sb-item.active{background:var(--bg3);color:var(--acid)}
+.sb-item i{font-size:16px;width:18px;flex-shrink:0}
+.sb-badge{margin-left:auto;background:var(--acid);color:#000;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
+.sb-footer{padding:16px 20px;border-top:1px solid var(--border)}
+.sb-user{display:flex;align-items:center;gap:10px}
+.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--acid);color:#000;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
+.sb-name{font-size:12.5px;color:var(--ink2)}
+
+/* Topbar */
+.topbar{padding:16px 26px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:20}
+.topbar-title{font-size:16px;font-weight:600;flex:1;letter-spacing:-0.2px}
+
+/* Buttons */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--ink);font-size:13px;cursor:pointer;transition:all 0.14s;font-family:inherit;font-weight:500}
+.btn:hover{background:var(--bg3);border-color:rgba(255,255,255,0.2)}
+.btn-acid{background:var(--acid);border-color:var(--acid);color:#000;font-weight:700}
+.btn-acid:hover{background:#b0d82e;border-color:#b0d82e}
+.btn-sm{padding:5px 11px;font-size:12px}
+
+.content{padding:22px 26px;flex:1}
+
+/* Page hero */
+.page-hero{padding:24px 26px 0}
+.hero-eyebrow{font-size:11px;font-weight:700;color:var(--acid);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
+.hero-title{font-size:44px;font-weight:800;letter-spacing:-2px;line-height:0.92;color:var(--ink);margin-bottom:4px}
+.hero-count{font-size:12px;color:var(--ink3);margin-bottom:20px}
+
+/* Phase filter */
+.phase-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
+.ptab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;letter-spacing:0.3px;font-family:inherit}
+.ptab:hover{border-color:var(--border2);color:var(--ink)}
+.ptab.active{background:var(--ink);color:#000;border-color:var(--ink)}
+
+/* Trip list */
+.trip-list{display:flex;flex-direction:column}
+.trip-row{display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.14s}
+.trip-row:hover .trip-name{color:var(--acid)}
+.trip-row:first-child{border-top:1px solid var(--border)}
+.trip-emoji{font-size:26px;width:38px;flex-shrink:0;text-align:center}
+.trip-body{flex:1;min-width:0}
+.trip-name{font-size:22px;font-weight:800;letter-spacing:-0.8px;line-height:1;margin-bottom:3px;transition:color 0.14s}
+.trip-meta{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px}
+.trip-prog{margin-top:8px;display:flex;align-items:center;gap:8px}
+.prog-bar{height:2px;background:var(--bg3);border-radius:2px;flex:1;overflow:hidden}
+.prog-fill{height:100%;border-radius:2px}
+.prog-pct{font-size:10px;font-weight:700;color:var(--ink3);min-width:28px}
+.trip-right{display:flex;flex-direction:column;align-items:flex-end;gap:8px;flex-shrink:0}
+.phase-badge{font-size:10px;font-weight:700;padding:4px 9px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase}
+.pb-dream{background:var(--orange);color:#fff}
+.pb-plan{background:var(--acid);color:#000}
+.pb-now{background:var(--purple);color:#fff}
+.pb-past{background:var(--bg3);color:var(--ink3)}
+.trip-avatars{display:flex}
+.av{width:22px;height:22px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #000;margin-left:-5px}
+.av:first-child{margin-left:0}
+.av0{background:var(--acid);color:#000}
+.av1{background:var(--orange);color:#fff}
+.av2{background:var(--purple);color:#fff}
+.av3{background:var(--bg3);color:var(--ink2)}
+
+/* Empty */
+.empty{text-align:center;padding:60px 20px;color:var(--ink2)}
+.empty i{font-size:40px;color:var(--ink3);margin-bottom:12px;display:block}
+.empty h3{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--ink)}
+.empty p{font-size:13.5px;line-height:1.6;max-width:260px;margin:0 auto 18px;color:var(--ink2)}
+
+/* Detail */
+.detail-hero{padding:22px 26px 0}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink3);cursor:pointer;margin-bottom:14px;background:none;border:none;font-family:inherit;transition:color 0.14s}
+.back-btn:hover{color:var(--ink)}
+.detail-eyebrow{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
+.detail-bigname{font-size:52px;font-weight:800;letter-spacing:-2.5px;line-height:0.88;margin-bottom:6px}
+.detail-submeta{font-size:12.5px;color:var(--ink2);margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.detail-submeta i{font-size:13px;vertical-align:-2px}
+.dtabs{display:flex;border-bottom:1px solid var(--border);padding:0 26px}
+.dtab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.14s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;letter-spacing:0.3px}
+.dtab:hover{color:var(--ink)}
+.dtab.active{color:var(--acid);border-bottom-color:var(--acid)}
+.dbody{padding:22px 26px}
+
+/* Itinerary */
+.day-label{font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;margin-top:24px;display:flex;align-items:center;gap:10px}
+.day-label:first-child{margin-top:0}
+.day-label::after{content:'';flex:1;height:1px;background:var(--border)}
+.ev-row{display:flex;gap:12px;margin-bottom:6px;align-items:stretch}
+.ev-time{width:42px;font-size:11.5px;color:var(--ink3);padding-top:14px;text-align:right;flex-shrink:0;font-weight:600}
+.ev-spine{display:flex;flex-direction:column;align-items:center}
+.ev-dot{width:8px;height:8px;border-radius:50%;border:2px solid var(--acid);background:var(--bg);margin-top:16px;flex-shrink:0}
+.ev-dot.f{background:var(--acid)}
+.ev-dot.next{border-color:var(--purple);background:var(--purple)}
+.ev-connector{width:1px;flex:1;background:var(--border);min-height:10px}
+.ev-card{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:border-color 0.14s}
+.ev-card:hover{border-color:var(--border2)}
+.ev-card.is-past{opacity:0.45}
+.ev-card.is-next{border-color:var(--purple);box-shadow:0 0 0 1px var(--purple)}
+.ev-card.is-active{border-color:var(--acid);box-shadow:0 0 0 1px var(--acid)}
+.ev-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
+.ev-name{font-size:13.5px;font-weight:700;letter-spacing:-0.2px}
+.ev-tbadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;flex-shrink:0}
+.t-train{background:#1E1B4B;color:#818CF8}
+.t-hotel{background:#052E16;color:#4ADE80}
+.t-activity{background:#431407;color:#FB923C}
+.t-food{background:#451A03;color:#FBBF24}
+.t-flight{background:#0C1A4E;color:#60A5FA}
+.t-vibes{background:#2D1B4E;color:#C084FC}
+.t-shopping{background:#1A1A2E;color:#F472B6}
+.ev-note{font-size:12px;color:var(--ink3);margin-top:2px}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.sec-label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px}
+
+/* Checklist */
+.cl-section{margin-bottom:28px}
+.cl-title{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.cl-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);cursor:pointer;transition:background 0.12s}
+.cl-item:hover{background:var(--bg2)}
+.cl-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--acid);cursor:pointer;flex-shrink:0}
+.cl-item label{font-size:13.5px;cursor:pointer;flex:1;color:var(--ink)}
+.cl-item.done label{text-decoration:line-through;color:var(--ink3)}
+.add-row{display:flex;gap:8px;margin-top:8px}
+.add-input{flex:1;padding:9px 12px;border-radius:var(--r);border:1px solid var(--border);font-size:13px;font-family:inherit;color:var(--ink);background:var(--bg2);transition:border-color 0.14s}
+.add-input:focus{outline:none;border-color:var(--acid)}
+.add-input::placeholder{color:var(--ink3)}
+
+/* ── LIVE / PÅGÅR TAB ── */
+.live-header{margin-bottom:20px}
+.live-status-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.live-pulse{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--acid);text-transform:uppercase;letter-spacing:0.8px}
+.pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--acid);animation:pulse 1.5s infinite}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+.live-where{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:2px}
+.live-subtext{font-size:13px;color:var(--ink2)}
+
+/* Next up card */
+.next-up-card{background:var(--bg2);border:1px solid var(--purple);border-radius:var(--r2);padding:18px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.next-up-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)}
+.next-up-eyebrow{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.next-up-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-bottom:3px}
+.next-up-meta{font-size:12.5px;color:var(--ink2)}
+.next-up-time{font-size:32px;font-weight:300;color:var(--purple);margin-top:8px;letter-spacing:-1px}
+
+/* Weather */
+.weather-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
+.weather-emoji{font-size:32px}
+.weather-info{flex:1}
+.weather-city{font-size:14px;font-weight:700;margin-bottom:1px}
+.weather-desc{font-size:12px;color:var(--ink3)}
+.weather-temp{font-size:32px;font-weight:300;color:var(--acid);letter-spacing:-1px}
+
+/* Timeline mini for live */
+.timeline-label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;margin-top:20px}
+
+/* Reflect */
+.reflect-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:22px}
+.reflect-dest{font-size:13px;font-weight:700;color:var(--acid);margin-bottom:4px;letter-spacing:0.3px}
+.reflect-dates{font-size:12px;color:var(--ink3);margin-bottom:14px}
+.star-row{display:flex;gap:4px;margin-bottom:14px}
+.star{font-size:22px;cursor:pointer;transition:all 0.12s;color:var(--ink3)}
+.star.lit{color:var(--acid)}
+.star:hover{transform:scale(1.15)}
+.reflect-textarea{width:100%;min-height:110px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r);font-size:13.5px;font-family:inherit;color:var(--ink);background:var(--bg3);resize:vertical;transition:border-color 0.14s;line-height:1.65}
+.reflect-textarea:focus{outline:none;border-color:var(--acid)}
+.reflect-textarea::placeholder{color:var(--ink3)}
+.locked-box{text-align:center;padding:48px 20px;border:1px solid var(--border);border-radius:var(--r2);background:var(--bg2)}
+.locked-box i{font-size:36px;color:var(--ink3);display:block;margin-bottom:12px}
+.locked-box p{font-size:13.5px;color:var(--ink2);line-height:1.6;margin-bottom:18px;max-width:260px;margin-left:auto;margin-right:auto}
+
+/* Wishlist */
+.wish-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start;transition:border-color 0.14s;position:relative;overflow:hidden}
+.wish-item:hover{border-color:var(--border2)}
+.wish-accent{position:absolute;left:0;top:0;bottom:0;width:3px}
+.wish-emoji{font-size:28px;flex-shrink:0;margin-top:2px}
+.wish-body{flex:1;min-width:0}
+.wish-place{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
+.wish-why{font-size:13px;color:var(--ink2);margin-bottom:8px;line-height:1.5}
+.wish-tags{display:flex;gap:5px;flex-wrap:wrap}
+.wish-tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--bg3);color:var(--ink3);letter-spacing:0.3px;text-transform:uppercase}
+.wish-cta{flex-shrink:0;margin-top:2px}
+
+/* Memories */
+.memory-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:10px}
+.memory-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
+.memory-dest{font-size:18px;font-weight:800;letter-spacing:-0.5px}
+.memory-date{font-size:12px;color:var(--ink3)}
+.memory-stars{font-size:16px;letter-spacing:3px;margin-bottom:8px;color:var(--acid)}
+.memory-text{font-size:13.5px;color:var(--ink2);line-height:1.65}
+
+/* Modal */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
+.modal-overlay.open{display:flex}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:26px;width:440px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:20px}
+.form-group{margin-bottom:14px}
+.form-label{font-size:10.5px;font-weight:700;color:var(--ink3);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.6px}
+.form-input{width:100%;padding:9px 12px;border-radius:var(--r);border:1px solid var(--border);font-size:13.5px;font-family:inherit;color:var(--ink);background:var(--bg3);transition:border-color 0.14s}
+.form-input:focus{outline:none;border-color:var(--acid)}
+.form-input::placeholder{color:var(--ink3)}
+.form-row{display:flex;gap:10px}
+.form-row .form-group{flex:1}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.opt-pills{display:flex;gap:6px;flex-wrap:wrap}
+.opt-pill{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;font-family:inherit}
+.opt-pill:hover{border-color:var(--border2);color:var(--ink)}
+.opt-pill.sel{background:var(--ink);color:#000;border-color:var(--ink)}
+
+/* Link button */
+.link-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--acid);text-decoration:none;margin-top:6px;font-weight:600}
+.link-btn:hover{text-decoration:underline}
+
+.hidden{display:none!important}
+</style>
+</head>
+<body>
+<div class="app">
+
+  <nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-wordmark">WANDR</div>
+      <div class="sb-sub">din resekompass</div>
+    </div>
+    <div class="sb-nav">
+      <div class="sb-section">Resor</div>
+      <button class="sb-item active" onclick="showView('trips')" id="nav-trips"><i class="ti ti-map-2"></i>Alla resor</button>
+      <button class="sb-item" onclick="showView('wishlist')" id="nav-wishlist"><i class="ti ti-heart"></i>Önskelista<span class="sb-badge" id="wish-badge">3</span></button>
+      <div class="sb-section">Minnen</div>
+      <button class="sb-item" onclick="showView('memories')" id="nav-memories"><i class="ti ti-notebook"></i>Reflektioner</button>
+    </div>
+    <div class="sb-footer">
+      <div class="sb-user">
+        <div class="sb-avatar">J</div>
+        <div class="sb-name">Mitt konto</div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="main" id="main">
+
+    <!-- TRIPS -->
+    <div id="view-trips">
+      <div class="page-hero">
+        <div class="hero-eyebrow">Wandr – dina resor</div>
+        <div class="hero-title">VÄR<br>LDEN</div>
+        <div class="hero-count" id="hero-count"></div>
+      </div>
+      <div class="content">
+        <div class="phase-tabs">
+          <button class="ptab active" onclick="filterTrips('all',this)">Alla</button>
+          <button class="ptab" onclick="filterTrips('dream',this)">Dröm</button>
+          <button class="ptab" onclick="filterTrips('plan',this)">Planerar</button>
+          <button class="ptab" onclick="filterTrips('now',this)">Pågår</button>
+          <button class="ptab" onclick="filterTrips('past',this)">Avklarade</button>
+        </div>
+        <div class="trip-list" id="trips-list"></div>
+        <div style="margin-top:24px">
+          <button class="btn btn-acid" onclick="openModal('trip')"><i class="ti ti-plus"></i> Ny resa</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- WISHLIST -->
+    <div id="view-wishlist" class="hidden">
+      <div class="page-hero">
+        <div class="hero-eyebrow">Wandr – önskelista</div>
+        <div class="hero-title" style="color:var(--purple)">DRÖ<br>MMAR</div>
+        <div class="hero-count" id="wish-hero-count"></div>
+      </div>
+      <div class="content">
+        <div id="wish-list"></div>
+        <div style="margin-top:16px">
+          <button class="btn btn-acid" onclick="openModal('wish')"><i class="ti ti-plus"></i> Lägg till drömplats</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MEMORIES -->
+    <div id="view-memories" class="hidden">
+      <div class="page-hero">
+        <div class="hero-eyebrow">Wandr – minnen</div>
+        <div class="hero-title" style="color:var(--ink3)">MIN<br>NEN</div>
+        <div class="hero-count" id="mem-count"></div>
+      </div>
+      <div class="content"><div id="memories-list"></div></div>
+    </div>
+
+    <!-- DETAIL -->
+    <div id="view-detail" class="hidden">
+      <div class="detail-hero">
+        <button class="back-btn" onclick="showView('trips')"><i class="ti ti-arrow-left"></i> Tillbaka</button>
+        <div class="detail-eyebrow" id="d-eyebrow"></div>
+        <div class="detail-bigname" id="d-bigname"></div>
+        <div class="detail-submeta" id="d-submeta"></div>
+      </div>
+      <div class="dtabs">
+        <button class="dtab active" onclick="showDTab('itinerary',this)">Tidslinje</button>
+        <button class="dtab" onclick="showDTab('checklist',this)">Checklista</button>
+        <button class="dtab" onclick="showDTab('live',this)">Just nu</button>
+        <button class="dtab" onclick="showDTab('reflect',this)">Reflektera</button>
+      </div>
+      <div class="dbody">
+        <div id="tab-itinerary">
+          <div class="sec-header">
+            <div class="sec-label">Händelser</div>
+            <button class="btn btn-sm" onclick="openModal('event')"><i class="ti ti-plus"></i> Lägg till</button>
+          </div>
+          <div id="itin-days"></div>
+        </div>
+        <div id="tab-checklist" class="hidden">
+          <div class="cl-section">
+            <div class="cl-title"><i class="ti ti-briefcase" style="font-size:13px"></i> Packning</div>
+            <div id="cl-pack"></div>
+            <div class="add-row">
+              <input class="add-input" id="in-pack" placeholder="Lägg till sak..." onkeydown="if(event.key==='Enter')addCheck('pack')">
+              <button class="btn btn-sm" onclick="addCheck('pack')">Lägg till</button>
+            </div>
+          </div>
+          <div class="cl-section">
+            <div class="cl-title"><i class="ti ti-clipboard-check" style="font-size:13px"></i> Att göra innan</div>
+            <div id="cl-todo"></div>
+            <div class="add-row">
+              <input class="add-input" id="in-todo" placeholder="T.ex. ladda ner biljett..." onkeydown="if(event.key==='Enter')addCheck('todo')">
+              <button class="btn btn-sm" onclick="addCheck('todo')">Lägg till</button>
+            </div>
+          </div>
+        </div>
+        <div id="tab-live" class="hidden">
+          <div id="live-content"></div>
+        </div>
+        <div id="tab-reflect" class="hidden">
+          <div id="reflect-area"></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- MODAL: Trip -->
+<div class="modal-overlay" id="modal-trip" onclick="overlayClose(event,'trip')">
+  <div class="modal-box">
+    <div class="modal-title">Ny resa</div>
+    <div class="form-group"><label class="form-label">Destination</label><input class="form-input" id="f-dest" placeholder="T.ex. Belfast, Irland"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Från</label><input class="form-input" id="f-from" type="date"></div>
+      <div class="form-group"><label class="form-label">Till</label><input class="form-input" id="f-to" type="date"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Resesällskap</label><input class="form-input" id="f-people" placeholder="T.ex. Sara, Jonas"></div>
+    <div class="form-group">
+      <label class="form-label">Fas</label>
+      <div class="opt-pills">
+        <button class="opt-pill sel" onclick="setPill(this,'trip-phase','dream')">✨ Dröm</button>
+        <button class="opt-pill" onclick="setPill(this,'trip-phase','plan')">📋 Planerar</button>
+        <button class="opt-pill" onclick="setPill(this,'trip-phase','now')">✈️ Pågår</button>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('trip')">Avbryt</button>
+      <button class="btn btn-acid" onclick="saveTrip()">Skapa resa</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Event -->
+<div class="modal-overlay" id="modal-event" onclick="overlayClose(event,'event')">
+  <div class="modal-box">
+    <div class="modal-title">Lägg till händelse</div>
+    <div class="form-group">
+      <label class="form-label">Typ</label>
+      <div class="opt-pills">
+        <button class="opt-pill sel" onclick="setPill(this,'ev-type','train')">🚂 Tåg</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','flight')">✈️ Flyg</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','hotel')">🏨 Boende</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','activity')">🎭 Aktivitet</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','food')">🍽️ Mat</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','shopping')">🛍️ Shopping</button>
+        <button class="opt-pill" onclick="setPill(this,'ev-type','vibes')">✌️ Vibes</button>
+      </div>
+    </div>
+    <div class="form-group"><label class="form-label">Namn</label><input class="form-input" id="ev-name" placeholder="T.ex. Nattåg Stockholm → Umeå"></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Datum</label><input class="form-input" id="ev-date" type="date"></div>
+      <div class="form-group"><label class="form-label">Tid</label><input class="form-input" id="ev-time" type="time"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Anteckning / länk</label><input class="form-input" id="ev-note" placeholder="Bokningsnr, adress, länk..."></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('event')">Avbryt</button>
+      <button class="btn btn-acid" onclick="saveEvent()">Lägg till</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Wish -->
+<div class="modal-overlay" id="modal-wish" onclick="overlayClose(event,'wish')">
+  <div class="modal-box">
+    <div class="modal-title">Lägg till drömplats</div>
+    <div class="form-group"><label class="form-label">Plats</label><input class="form-input" id="w-place" placeholder="T.ex. Tbilisi, Georgien"></div>
+    <div class="form-group"><label class="form-label">Varför vill du dit?</label><input class="form-input" id="w-why" placeholder="T.ex. mat, arkitektur..."></div>
+    <div class="form-group"><label class="form-label">Taggar (kommaseparerat)</label><input class="form-input" id="w-tags" placeholder="T.ex. kultur, mat, natur"></div>
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModal('wish')">Avbryt</button>
+      <button class="btn btn-acid" onclick="saveWish()">Spara</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const MONTHS=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
+const TYPE_LABEL={train:'Tåg',hotel:'Boende',activity:'Aktivitet',food:'Mat',flight:'Flyg',shopping:'Shopping',vibes:'Vibes'};
+const TYPE_EMOJI={train:'🚂',hotel:'🏨',activity:'🎭',food:'🍽️',flight:'✈️',shopping:'🛍️',vibes:'✌️'};
+const WISH_EMOJIS=['🌍','🏔️','🌊','🏙️','🌺','🗺️','⛵','🌄','🏜️','🗼','🌋','🦁'];
+const ACCENT_COLORS=['#C8F135','#FF5C00','#7B5CF5','#555'];
+
+let S={
+  filter:'all', tripPhase:'dream', evType:'train', currentTrip:null,
+  trips:[
+    // Umeå – pågår
+    {id:10, dest:'Umeå, Sverige', from:'2026-06-12', to:'2026-06-14',
+     people:['Simon','Signe'], phase:'now', progress:20, rating:0,
+     events:[
+       {id:100, type:'train', name:'Nattåg Stockholm → Umeå', date:'2026-06-12', time:'21:55', note:'SJ nattåg – avgår Centralstationen'},
+       {id:101, type:'train', name:'Framkomst Umeå C', date:'2026-06-13', time:'06:42', note:''},
+       {id:102, type:'food', name:'Frukost alt. A — Gotthards Krog / Kulturbageriet', date:'2026-06-13', time:'08:00', note:'Stora Hotellet · hantverksbageri & krog, öppet från tidig morgon', link:'https://storahotelletumea.se/faciliteter/restaurang-cafe-hantverksbageri/'},
+       {id:1021, type:'food', name:'Frukost alt. B — NÖR, Clarion Hotel', date:'2026-06-13', time:'08:00', note:'Skybar & terrassrestaurang med utsikt · plan B om Gotthards är fullt', link:'https://www.strawberry.se/hotell/sverige/umea/clarion-hotel-umea/#facilities'},
+       {id:103, type:'activity', name:'AI and the Paradox of Agency', date:'2026-06-13', time:'12:00', note:'Bildmuseet · Öppet 12–17 · Fri entré · bildmuseet.umu.se', link:'https://www.bildmuseet.umu.se/utstallningar/2026/ai-and-the-paradox-of-agency/'},
+       {id:104, type:'shopping', name:'Shopping i centrum', date:'2026-06-13', time:'15:00', note:'Kungsgatan & Galleria Avion'},
+       {id:105, type:'vibes', name:'Viba, utforska, häng', date:'2026-06-13', time:'17:30', note:'Umeälven, gamla stan, whatever feels right'},
+       {id:106, type:'food', name:'Middag', date:'2026-06-13', time:'19:00', note:'Välj något gott!'},
+       {id:107, type:'train', name:'Nattåg Umeå → Stockholm', date:'2026-06-13', time:'21:23', note:'SJ nattåg – avgår Umeå C'},
+       {id:108, type:'train', name:'Framkomst Stockholm C', date:'2026-06-14', time:'06:18', note:''},
+     ],
+     checklist:{
+       pack:['Tågbiljett (ladda ner!)','Öronproppar','Ögonmask','Laddare','Kontanter'],
+       todo:['Checka in på SJ-appen','Kolla Bildmuseets öppettider']
+     },
+     packDone:[], todoDone:[], reflection:''},
+
+    // Belfast
+    {id:1, dest:'Belfast, Irland', from:'2026-08-12', to:'2026-08-18',
+     people:['Sara','Jonas'], phase:'plan', progress:60, rating:0,
+     events:[
+       {id:10, type:'flight', name:'Arlanda → Belfast', date:'2026-08-12', time:'06:45', note:'Ryanair FR 4421'},
+       {id:11, type:'hotel', name:'Grand Central Hotel', date:'2026-08-12', time:'15:00', note:'Bekräftelse: GCH-9921'},
+       {id:12, type:'activity', name:'Titanic Museum', date:'2026-08-13', time:'10:00', note:'Boka biljetter online'},
+       {id:13, type:'food', name:'Mourne Seafood Bar', date:'2026-08-13', time:'19:00', note:''},
+     ],
+     checklist:{pack:['Pass','Laddare','Regnkläder'],todo:['Boka hunddagis','Meddela arbetet']},
+     packDone:['Pass'], todoDone:[], reflection:''},
+
+    // Tokyo
+    {id:2, dest:'Tokyo, Japan', from:'2027-03-20', to:'2027-04-02',
+     people:['Emma'], phase:'dream', progress:5, rating:0,
+     events:[], checklist:{pack:[],todo:[]}, packDone:[], todoDone:[], reflection:''},
+
+    // Lissabon
+    {id:3, dest:'Lissabon, Portugal', from:'2025-09-05', to:'2025-09-12',
+     people:['Sara','Marcus','Lena'], phase:'past', progress:100, rating:4,
+     events:[], checklist:{pack:[],todo:[]}, packDone:[], todoDone:[],
+     reflection:'Fantastisk stad. Pastéis de nata, kvällar i Alfama och perfekt väder. Vill absolut tillbaka.'},
+  ],
+  wishes:[
+    {id:1, place:'Tbilisi, Georgien', why:'Vin, arkitektur och fantastisk mat', tags:['kultur','mat','vin'], emoji:'🍷'},
+    {id:2, place:'Oaxaca, Mexiko', why:'Hantverk, mole och mezcal', tags:['mat','hantverk'], emoji:'🌮'},
+    {id:3, place:'Faröarna', why:'Dramatiskt landskap och tystnad', tags:['natur','vandring'], emoji:'🏔️'},
+  ]
+};
+
+function fmt(d){if(!d)return'–';const[,m,dd]=d.split('-');return`${parseInt(dd)} ${MONTHS[parseInt(m)-1]}`}
+function fmtFull(d){if(!d)return'–';const[y,m,dd]=d.split('-');return`${parseInt(dd)} ${MONTHS[parseInt(m)-1]} ${y}`}
+
+// Get "current" simulated datetime — we simulate being on 2026-06-13 at 09:30 when trip is active
+function getSimNow(trip){
+  if(trip && trip.id===10) return {date:'2026-06-13', time:'09:30'};
+  const now=new Date();
+  const pad=n=>String(n).padStart(2,'0');
+  return {date:`${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`, time:`${pad(now.getHours())}:${pad(now.getMinutes())}`};
+}
+
+function showView(v){
+  ['trips','wishlist','memories','detail'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hidden',x!==v));
+  ['trips','wishlist','memories'].forEach(x=>document.getElementById('nav-'+x)?.classList.toggle('active',x===v));
+  if(v==='trips')renderTrips();
+  if(v==='wishlist')renderWishlist();
+  if(v==='memories')renderMemories();
+}
+
+function filterTrips(phase,btn){
+  S.filter=phase;
+  document.querySelectorAll('.ptab').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTrips();
+}
+
+function renderTrips(){
+  let trips=S.trips;
+  if(S.filter!=='all')trips=trips.filter(t=>t.phase===S.filter);
+  document.getElementById('hero-count').textContent=`${S.trips.length} resa${S.trips.length!==1?'r':''}`;
+  const list=document.getElementById('trips-list');
+  if(!trips.length){list.innerHTML=`<div class="empty"><i class="ti ti-map-off"></i><h3>Inga resor här</h3><p>Tryck på "Ny resa" för att lägga till.</p></div>`;return;}
+  const pLabel={dream:'Dröm',plan:'Planerar',now:'Pågår',past:'Avslutad'};
+  const pClass={dream:'pb-dream',plan:'pb-plan',now:'pb-now',past:'pb-past'};
+  const pColor={dream:ACCENT_COLORS[1],plan:ACCENT_COLORS[0],now:'#7B5CF5',past:ACCENT_COLORS[3]};
+  list.innerHTML=trips.map(t=>{
+    const avs=t.people.slice(0,4).map((p,i)=>`<div class="av av${i}">${p[0]}</div>`).join('');
+    const prog=(t.phase==='plan'||t.phase==='now')?`<div class="trip-prog"><div class="prog-bar"><div class="prog-fill" style="width:${t.progress}%;background:${pColor[t.phase]}"></div></div><span class="prog-pct">${t.progress}%</span></div>`:'';
+    const dest0=t.dest.split(',')[0];
+    return`<div class="trip-row" onclick="openTrip(${t.id})">
+      <div class="trip-emoji">${getTripEmoji(t.dest)}</div>
+      <div class="trip-body">
+        <div class="trip-name">${dest0.toUpperCase()}</div>
+        <div class="trip-meta"><span>${t.dest}</span><span>·</span><span>${fmt(t.from)} – ${fmt(t.to)}</span></div>
+        ${prog}
+      </div>
+      <div class="trip-right">
+        <div class="phase-badge ${pClass[t.phase]}">${pLabel[t.phase]}</div>
+        <div class="trip-avatars">${avs}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function getTripEmoji(dest){
+  const map={'Japan':'🗼','Irland':'🍀','Portugal':'🐟','Mexiko':'🌮','Georgien':'🍷','Faröarna':'🏔️','Sverige':'🫎','Umeå':'🫎','Thailand':'🛕','Spanien':'💃','Frankrike':'🗼','USA':'🗽','Marocko':'🕌','Island':'🌋'};
+  for(const[k,v]of Object.entries(map)){if(dest.includes(k))return v;}
+  return'🌍';
+}
+
+function openTrip(id){
+  S.currentTrip=S.trips.find(t=>t.id===id);
+  const t=S.currentTrip;
+  const pLabel={dream:'Drömresa',plan:'Planerar · aktiv',now:'✈️ Pågår nu',past:'Avslutad'};
+  const pColor={dream:ACCENT_COLORS[1],plan:ACCENT_COLORS[0],now:'#7B5CF5',past:ACCENT_COLORS[3]};
+  document.getElementById('d-eyebrow').textContent=pLabel[t.phase];
+  document.getElementById('d-eyebrow').style.color=pColor[t.phase];
+  document.getElementById('d-bigname').textContent=t.dest.split(',')[0].toUpperCase();
+  document.getElementById('d-bigname').style.color=t.phase==='now'?'#7B5CF5':t.phase==='plan'?'var(--acid)':'var(--ink)';
+  document.getElementById('d-submeta').innerHTML=`<span><i class="ti ti-calendar"></i> ${fmtFull(t.from)} – ${fmtFull(t.to)}</span><span><i class="ti ti-users"></i> ${t.people.join(', ')}</span>`;
+  showView('detail');
+  document.querySelectorAll('.dtab').forEach((b,i)=>b.classList.toggle('active',i===0));
+  showDTab('itinerary',document.querySelector('.dtab'));
+}
+
+function showDTab(tab,btn){
+  ['itinerary','checklist','live','reflect'].forEach(t=>document.getElementById('tab-'+t).classList.toggle('hidden',t!==tab));
+  document.querySelectorAll('.dtab').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  if(tab==='itinerary')renderItinerary();
+  if(tab==='checklist')renderChecklist();
+  if(tab==='live')renderLive();
+  if(tab==='reflect')renderReflect();
+}
+
+function getEventStatus(ev, simNow){
+  const evDT=ev.date+'T'+(ev.time||'00:00');
+  const nowDT=simNow.date+'T'+simNow.time;
+  if(evDT < nowDT) return 'past';
+  // "active" = within 60 min after start
+  const evMs=new Date(evDT).getTime();
+  const nowMs=new Date(nowDT).getTime();
+  if(evMs<=nowMs+60*60*1000 && evMs>=nowMs-30*60*1000) return 'active';
+  return 'future';
+}
+
+function renderItinerary(){
+  const t=S.currentTrip;
+  const el=document.getElementById('itin-days');
+  if(!t.events.length){el.innerHTML=`<div class="empty"><i class="ti ti-calendar-off"></i><h3>Inga händelser ännu</h3><p>Lägg till tåg, boende och aktiviteter.</p></div>`;return;}
+  const simNow=getSimNow(t);
+  const byDate={};
+  t.events.forEach(e=>{if(!byDate[e.date])byDate[e.date]=[];byDate[e.date].push(e)});
+  // find index of next event
+  const allSorted=[...t.events].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const nextEv=allSorted.find(e=>getEventStatus(e,simNow)==='future');
+
+  el.innerHTML=Object.keys(byDate).sort().map(date=>{
+    const evs=byDate[date].sort((a,b)=>(a.time||'').localeCompare(b.time||''));
+    const dayRows=evs.map((e,i)=>{
+      const status=t.phase==='now'?getEventStatus(e,simNow):'future';
+      const isNext=nextEv&&e.id===nextEv.id;
+      const cardClass=status==='past'?'is-past':isNext?'is-next':status==='active'?'is-active':'';
+      const dotClass=status==='past'?'f':isNext?'next':i===0?'f':'';
+      const linkHtml=e.link?`<a class="link-btn" href="${e.link}" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Öppna hemsida</a>`:'';
+      return`<div class="ev-row">
+        <div class="ev-time">${e.time||'–'}</div>
+        <div class="ev-spine">
+          <div class="ev-dot ${dotClass}"></div>
+          ${i<evs.length-1?'<div class="ev-connector"></div>':''}
+        </div>
+        <div class="ev-card ${cardClass}">
+          <div class="ev-top">
+            <div class="ev-name">${TYPE_EMOJI[e.type]||''} ${e.name}</div>
+            <span class="ev-tbadge t-${e.type}">${TYPE_LABEL[e.type]}</span>
+          </div>
+          ${e.note?`<div class="ev-note">${e.note}</div>`:''}
+          ${linkHtml}
+        </div>
+      </div>`;
+    }).join('');
+    return`<div class="day-label">${fmt(date)}</div>${dayRows}`;
+  }).join('');
+}
+
+function renderChecklist(){
+  const t=S.currentTrip;
+  ['pack','todo'].forEach(cat=>{
+    document.getElementById('cl-'+cat).innerHTML=t.checklist[cat].map((item,i)=>{
+      const done=(t[cat+'Done']||[]).includes(item);
+      return`<div class="cl-item ${done?'done':''}">
+        <input type="checkbox" id="ci-${cat}-${i}" ${done?'checked':''} onchange="toggleCheck('${cat}','${item}')">
+        <label for="ci-${cat}-${i}">${item}</label>
+      </div>`;
+    }).join('');
+  });
+}
+
+function toggleCheck(cat,item){
+  const t=S.currentTrip,k=cat+'Done';
+  if(!t[k])t[k]=[];
+  t[k]=t[k].includes(item)?t[k].filter(x=>x!==item):[...t[k],item];
+  renderChecklist();
+}
+
+function addCheck(cat){
+  const inp=document.getElementById('in-'+cat),v=inp.value.trim();
+  if(!v)return;
+  S.currentTrip.checklist[cat].push(v);inp.value='';renderChecklist();
+}
+
+function renderLive(){
+  const t=S.currentTrip;
+  const el=document.getElementById('live-content');
+
+  if(t.phase!=='now'){
+    // Not active trip — show simple upcoming
+    const upcoming=[...t.events].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time)).slice(0,4);
+    el.innerHTML=`
+      <div class="weather-strip">
+        <div class="weather-emoji">⛅</div>
+        <div class="weather-info">
+          <div class="weather-city">${t.dest.split(',')[0]}</div>
+          <div class="weather-desc">Väder visas när resan är aktiv</div>
+        </div>
+        <div class="weather-temp">–°</div>
+      </div>
+      <div class="timeline-label">Kommande händelser</div>
+      ${upcoming.map((e,i)=>`<div class="ev-row">
+        <div class="ev-time">${e.time||'–'}</div>
+        <div class="ev-spine"><div class="ev-dot ${i===0?'f':''}"></div>${i<upcoming.length-1?'<div class="ev-connector"></div>':''}</div>
+        <div class="ev-card"><div class="ev-top"><div class="ev-name">${TYPE_EMOJI[e.type]||''} ${e.name}</div><span class="ev-tbadge t-${e.type}">${TYPE_LABEL[e.type]}</span></div>${e.note?`<div class="ev-note">${e.note}</div>`:''}</div>
+      </div>`).join('')}`;
+    return;
+  }
+
+  // Active trip — rich live view
+  const simNow=getSimNow(t);
+  const allSorted=[...t.events].sort((a,b)=>(a.date+a.time).localeCompare(b.date+b.time));
+  const nextEv=allSorted.find(e=>getEventStatus(e,simNow)==='future');
+  const currentEv=allSorted.find(e=>getEventStatus(e,simNow)==='active');
+  const remaining=allSorted.filter(e=>getEventStatus(e,simNow)==='future').slice(0,3);
+
+  // Location logic
+  const loc=simNow.date==='2026-06-13'?'Umeå':'På väg';
+
+  let nextUpHtml='';
+  const showEv=currentEv||nextEv;
+  if(showEv){
+    nextUpHtml=`<div class="next-up-card">
+      <div class="next-up-eyebrow">${currentEv?'Pågår nu':'Nästa upp'}</div>
+      <div class="next-up-name">${TYPE_EMOJI[showEv.type]||''} ${showEv.name}</div>
+      <div class="next-up-meta">${showEv.note||'Klockan '+showEv.time}</div>
+      <div class="next-up-time">${showEv.time}</div>
+      ${showEv.link?`<a class="link-btn" href="${showEv.link}" target="_blank"><i class="ti ti-external-link" style="font-size:11px"></i> Öppna hemsida</a>`:''}
+    </div>`;
+  }
+
+  const remainingHtml=remaining.length?`
+    <div class="timeline-label">Senare idag</div>
+    ${remaining.map((e,i)=>`<div class="ev-row">
+      <div class="ev-time">${e.time||'–'}</div>
+      <div class="ev-spine"><div class="ev-dot ${i===0?'next':''}"></div>${i<remaining.length-1?'<div class="ev-connector"></div>':''}</div>
+      <div class="ev-card"><div class="ev-top"><div class="ev-name">${TYPE_EMOJI[e.type]||''} ${e.name}</div><span class="ev-tbadge t-${e.type}">${TYPE_LABEL[e.type]}</span></div>${e.note?`<div class="ev-note">${e.note}</div>`:''}</div>
+    </div>`).join('')}`:'';
+
+  el.innerHTML=`
+    <div class="live-header">
+      <div class="live-status-row">
+        <div class="live-pulse"><span class="pulse-dot"></span> Live</div>
+        <span style="font-size:11px;color:var(--ink3)">${simNow.date} · ${simNow.time}</span>
+      </div>
+      <div class="live-where">${loc.toUpperCase()}</div>
+      <div class="live-subtext">Med ${t.people.join(' & ')}</div>
+    </div>
+    <div class="weather-strip">
+      <div class="weather-emoji">🌤️</div>
+      <div class="weather-info">
+        <div class="weather-city">${loc}</div>
+        <div class="weather-desc">Mestadels soligt · 17° · vind 5 m/s</div>
+      </div>
+      <div class="weather-temp">17°</div>
+    </div>
+    ${nextUpHtml}
+    ${remainingHtml}`;
+}
+
+function renderReflect(){
+  const t=S.currentTrip;
+  const el=document.getElementById('reflect-area');
+  if(t.phase!=='past'){
+    el.innerHTML=`<div class="locked-box"><i class="ti ti-lock"></i><p>Reflektioner låses upp när resan är avklarad.</p><button class="btn btn-acid" onclick="markPast()">Markera som avklarad</button></div>`;
+    return;
+  }
+  const stars=[1,2,3,4,5].map(n=>`<span class="star ${(t.rating||0)>=n?'lit':''}" onclick="setRating(${n})">${(t.rating||0)>=n?'★':'☆'}</span>`).join('');
+  el.innerHTML=`<div class="reflect-card">
+    <div class="reflect-dest">${t.dest.toUpperCase()}</div>
+    <div class="reflect-dates">${fmtFull(t.from)} – ${fmtFull(t.to)}</div>
+    <div class="star-row" id="star-row">${stars}</div>
+    <textarea class="reflect-textarea" placeholder="Hur var resan? Bästa stunden? Vad nästa gång?" onchange="S.currentTrip.reflection=this.value">${t.reflection||''}</textarea>
+  </div>`;
+}
+
+function setRating(n){S.currentTrip.rating=n;renderReflect();}
+function markPast(){S.currentTrip.phase='past';S.currentTrip.progress=100;renderReflect();}
+
+function renderWishlist(){
+  document.getElementById('wish-badge').textContent=S.wishes.length;
+  document.getElementById('wish-hero-count').textContent=`${S.wishes.length} resmål`;
+  const el=document.getElementById('wish-list');
+  if(!S.wishes.length){el.innerHTML=`<div class="empty"><i class="ti ti-heart-off"></i><h3>Önskelistan är tom</h3></div>`;return;}
+  const accents=['#C8F135','#FF5C00','#7B5CF5','#4ADE80','#60A5FA'];
+  el.innerHTML=S.wishes.map((w,i)=>`
+    <div class="wish-item">
+      <div class="wish-accent" style="background:${accents[i%accents.length]}"></div>
+      <div class="wish-emoji">${w.emoji}</div>
+      <div class="wish-body">
+        <div class="wish-place">${w.place.toUpperCase()}</div>
+        <div class="wish-why">${w.why}</div>
+        <div class="wish-tags">${w.tags.map(t=>`<span class="wish-tag">${t}</span>`).join('')}</div>
+      </div>
+      <div class="wish-cta"><button class="btn btn-sm" onclick="convertWish(${w.id})">Planera →</button></div>
+    </div>`).join('');
+}
+
+function convertWish(id){
+  const w=S.wishes.find(x=>x.id===id);
+  document.getElementById('f-dest').value=w.place;
+  openModal('trip');
+}
+
+function renderMemories(){
+  const past=S.trips.filter(t=>t.phase==='past');
+  document.getElementById('mem-count').textContent=`${past.length} resa${past.length!==1?'r':''}`;
+  const el=document.getElementById('memories-list');
+  if(!past.length){el.innerHTML=`<div class="empty"><i class="ti ti-book-off"></i><h3>Inga avklarade resor ännu</h3></div>`;return;}
+  el.innerHTML=past.map(t=>`
+    <div class="memory-item">
+      <div class="memory-top">
+        <div class="memory-dest">${t.dest.split(',')[0].toUpperCase()}</div>
+        <div class="memory-date">${fmtFull(t.from)} – ${fmtFull(t.to)}</div>
+      </div>
+      <div class="memory-stars">${'★'.repeat(t.rating||4)}${'☆'.repeat(5-(t.rating||4))}</div>
+      <div class="memory-text">${t.reflection||'Inga anteckningar.'}</div>
+    </div>`).join('');
+}
+
+function openModal(id){
+  document.getElementById('modal-'+id).classList.add('open');
+  if(id==='trip'){S.tripPhase='dream';document.querySelectorAll('#modal-trip .opt-pill').forEach((b,i)=>b.classList.toggle('sel',i===0));}
+  if(id==='event'){S.evType='train';document.querySelectorAll('#modal-event .opt-pill').forEach((b,i)=>b.classList.toggle('sel',i===0));if(S.currentTrip?.from)document.getElementById('ev-date').value=S.currentTrip.from;}
+}
+function closeModal(id){document.getElementById('modal-'+id).classList.remove('open');}
+function overlayClose(e,id){if(e.target===document.getElementById('modal-'+id))closeModal(id);}
+
+function setPill(btn,group,val){
+  btn.closest('.opt-pills').querySelectorAll('.opt-pill').forEach(b=>b.classList.remove('sel'));
+  btn.classList.add('sel');
+  if(group==='trip-phase')S.tripPhase=val;
+  if(group==='ev-type')S.evType=val;
+}
+
+function saveTrip(){
+  const dest=document.getElementById('f-dest').value.trim();
+  if(!dest)return;
+  const people=document.getElementById('f-people').value.split(',').map(s=>s.trim()).filter(Boolean);
+  S.trips.unshift({id:Date.now(),dest,from:document.getElementById('f-from').value,to:document.getElementById('f-to').value,people:people.length?people:['Jag'],phase:S.tripPhase,progress:0,rating:0,events:[],checklist:{pack:[],todo:[]},packDone:[],todoDone:[],reflection:''});
+  closeModal('trip');
+  ['f-dest','f-from','f-to','f-people'].forEach(id=>document.getElementById(id).value='');
+  renderTrips();
+}
+
+function saveEvent(){
+  const name=document.getElementById('ev-name').value.trim();
+  if(!name)return;
+  S.currentTrip.events.push({id:Date.now(),type:S.evType,name,date:document.getElementById('ev-date').value,time:document.getElementById('ev-time').value,note:document.getElementById('ev-note').value.trim()});
+  closeModal('event');
+  ['ev-name','ev-date','ev-time','ev-note'].forEach(id=>document.getElementById(id).value='');
+  renderItinerary();
+}
+
+function saveWish(){
+  const place=document.getElementById('w-place').value.trim();
+  if(!place)return;
+  const tags=document.getElementById('w-tags').value.split(',').map(s=>s.trim()).filter(Boolean);
+  S.wishes.push({id:Date.now(),place,why:document.getElementById('w-why').value.trim(),tags,emoji:WISH_EMOJIS[Math.floor(Math.random()*WISH_EMOJIS.length)]});
+  closeModal('wish');
+  ['w-place','w-why','w-tags'].forEach(id=>document.getElementById(id).value='');
+  renderWishlist();
+}
+
+renderTrips();
+
+// Register service worker
+if('serviceWorker' in navigator){
+  window.addEventListener('load', ()=>{
+    navigator.serviceWorker.register('sw.js')
+      .then(r=>console.log('SW registered'))
+      .catch(e=>console.log('SW error',e));
+  });
+}
+</script>
+</body>
+</html>
