@@ -250,6 +250,40 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
 .link-btn:hover{text-decoration:underline}
 
 .hidden{display:none!important}
+
+/* ── Mobile responsive ── */
+.mobile-topbar{display:none;padding:14px 18px;background:#000;border-bottom:1px solid rgba(255,255,255,0.07);align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
+.mobile-wordmark{font-size:17px;font-weight:700;color:#C8F135;letter-spacing:-0.3px}
+.hamburger{background:none;border:none;color:#888;cursor:pointer;padding:4px;display:flex;align-items:center}
+.hamburger i{font-size:24px}
+.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:40}
+.drawer-overlay.open{display:block}
+.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;background:#000;border-right:1px solid rgba(255,255,255,0.12);z-index:50;transform:translateX(-100%);transition:transform 0.22s ease;display:flex;flex-direction:column}
+.drawer.open{transform:translateX(0)}
+.drawer-logo{padding:22px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between}
+.drawer-close{background:none;border:none;color:#555;cursor:pointer;padding:4px}
+.drawer-close i{font-size:20px}
+.drawer-nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:1px}
+.bottom-nav{display:none;background:#000;border-top:1px solid rgba(255,255,255,0.07);padding:6px 0 max(6px,env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:30;flex-shrink:0}
+.bottom-nav-inner{display:flex;justify-content:space-around}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 18px;cursor:pointer;color:#555;border:none;background:none;font-family:inherit;transition:color 0.14s;position:relative}
+.bn-item.active{color:#C8F135}
+.bn-item i{font-size:22px}
+.bn-label{font-size:10px;font-weight:600;letter-spacing:0.2px}
+.bn-badge{position:absolute;top:3px;right:8px;background:#C8F135;color:#000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px}
+@media(max-width:620px){
+  .sidebar{display:none!important}
+  .mobile-topbar{display:flex}
+  .bottom-nav{display:block}
+  .content{padding:16px 18px}
+  .page-hero{padding:16px 18px 0}
+  .hero-title{font-size:34px;letter-spacing:-1.5px}
+  .detail-hero{padding:16px 18px 0}
+  .detail-bigname{font-size:38px;letter-spacing:-1.5px}
+  .dtabs{padding:0 18px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .dbody{padding:16px 18px}
+  .dtab{padding:10px 12px;font-size:12.5px}
+}
 </style>
 </head>
 <body>
@@ -275,6 +309,33 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
     </div>
   </nav>
 
+
+  <!-- Mobile topbar -->
+  <div class="mobile-topbar">
+    <div class="mobile-wordmark">WANDR</div>
+    <button class="hamburger" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
+  </div>
+
+  <!-- Drawer overlay -->
+  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
+
+  <!-- Drawer -->
+  <div class="drawer" id="drawer">
+    <div class="drawer-logo">
+      <div>
+        <div class="sb-wordmark">WANDR</div>
+        <div class="sb-sub">din resekompass</div>
+      </div>
+      <button class="drawer-close" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
+    </div>
+    <div class="drawer-nav">
+      <div class="sb-section">Resor</div>
+      <button class="sb-item active" onclick="showView('trips');closeDrawer()" id="dnav-trips"><i class="ti ti-map-2"></i>Alla resor</button>
+      <button class="sb-item" onclick="showView('wishlist');closeDrawer()" id="dnav-wishlist"><i class="ti ti-heart"></i>Önskelista<span class="sb-badge" id="dwish-badge">3</span></button>
+      <div class="sb-section">Minnen</div>
+      <button class="sb-item" onclick="showView('memories');closeDrawer()" id="dnav-memories"><i class="ti ti-notebook"></i>Reflektioner</button>
+    </div>
+  </div>
   <div class="main" id="main">
 
     <!-- TRIPS -->
@@ -373,6 +434,25 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       </div>
     </div>
 
+
+  <!-- Bottom nav (mobile) -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
+        <i class="ti ti-map-2"></i>
+        <span class="bn-label">Resor</span>
+      </button>
+      <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
+        <i class="ti ti-heart"></i>
+        <span class="bn-label">Önskelista</span>
+        <span class="bn-badge" id="bwish-badge">3</span>
+      </button>
+      <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
+        <i class="ti ti-notebook"></i>
+        <span class="bn-label">Minnen</span>
+      </button>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -398,6 +478,25 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       <button class="btn" onclick="closeModal('trip')">Avbryt</button>
       <button class="btn btn-acid" onclick="saveTrip()">Skapa resa</button>
     </div>
+
+  <!-- Bottom nav (mobile) -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
+        <i class="ti ti-map-2"></i>
+        <span class="bn-label">Resor</span>
+      </button>
+      <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
+        <i class="ti ti-heart"></i>
+        <span class="bn-label">Önskelista</span>
+        <span class="bn-badge" id="bwish-badge">3</span>
+      </button>
+      <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
+        <i class="ti ti-notebook"></i>
+        <span class="bn-label">Minnen</span>
+      </button>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -427,6 +526,25 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       <button class="btn" onclick="closeModal('event')">Avbryt</button>
       <button class="btn btn-acid" onclick="saveEvent()">Lägg till</button>
     </div>
+
+  <!-- Bottom nav (mobile) -->
+  <div class="bottom-nav">
+    <div class="bottom-nav-inner">
+      <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
+        <i class="ti ti-map-2"></i>
+        <span class="bn-label">Resor</span>
+      </button>
+      <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
+        <i class="ti ti-heart"></i>
+        <span class="bn-label">Önskelista</span>
+        <span class="bn-badge" id="bwish-badge">3</span>
+      </button>
+      <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
+        <i class="ti ti-notebook"></i>
+        <span class="bn-label">Minnen</span>
+      </button>
+    </div>
+  </div>
   </div>
 </div>
 
@@ -518,7 +636,11 @@ function getSimNow(trip){
 
 function showView(v){
   ['trips','wishlist','memories','detail'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hidden',x!==v));
-  ['trips','wishlist','memories'].forEach(x=>document.getElementById('nav-'+x)?.classList.toggle('active',x===v));
+  ['trips','wishlist','memories'].forEach(x=>{
+    document.getElementById('nav-'+x)?.classList.toggle('active',x===v);
+    document.getElementById('dnav-'+x)?.classList.toggle('active',x===v);
+    document.getElementById('bnav-'+x)?.classList.toggle('active',x===v && v!=='detail');
+  });
   if(v==='trips')renderTrips();
   if(v==='wishlist')renderWishlist();
   if(v==='memories')renderMemories();
@@ -762,7 +884,7 @@ function setRating(n){S.currentTrip.rating=n;renderReflect();}
 function markPast(){S.currentTrip.phase='past';S.currentTrip.progress=100;renderReflect();}
 
 function renderWishlist(){
-  document.getElementById('wish-badge').textContent=S.wishes.length;
+  ['wish-badge','dwish-badge','bwish-badge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=S.wishes.length;});
   document.getElementById('wish-hero-count').textContent=`${S.wishes.length} resmål`;
   const el=document.getElementById('wish-list');
   if(!S.wishes.length){el.innerHTML=`<div class="empty"><i class="ti ti-heart-off"></i><h3>Önskelistan är tom</h3></div>`;return;}
@@ -844,6 +966,16 @@ function saveWish(){
   closeModal('wish');
   ['w-place','w-why','w-tags'].forEach(id=>document.getElementById(id).value='');
   renderWishlist();
+}
+
+
+function openDrawer(){
+  document.getElementById("drawer").classList.add("open");
+  document.getElementById("drawer-overlay").classList.add("open");
+}
+function closeDrawer(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawer-overlay").classList.remove("open");
 }
 
 renderTrips();
