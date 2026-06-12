@@ -14,75 +14,60 @@
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 :root{
-  --bg:#0E0E0E;
-  --bg2:#181818;
-  --bg3:#222222;
-  --ink:#FFFFFF;
-  --ink2:#888888;
-  --ink3:#555555;
-  --acid:#C8F135;
-  --orange:#FF5C00;
-  --purple:#7B5CF5;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --r:8px;
-  --r2:12px;
+  --bg:#0E0E0E;--bg2:#181818;--bg3:#222222;
+  --ink:#FFFFFF;--ink2:#888888;--ink3:#555555;
+  --acid:#C8F135;--orange:#FF5C00;--purple:#7B5CF5;
+  --border:rgba(255,255,255,0.07);--border2:rgba(255,255,255,0.12);
+  --r:8px;--r2:12px;
 }
 html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-serif;background:var(--bg);color:var(--ink);font-size:15px;-webkit-font-smoothing:antialiased}
-.app{display:flex;height:100vh;overflow:hidden;position:relative}
-.sidebar{display:none}
+.app{display:flex;flex-direction:column;height:100vh;overflow:hidden}
+
+/* Top bar */
+.topbar{background:#000;border-bottom:1px solid var(--border);padding:14px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0}
+.topbar-wordmark{font-size:17px;font-weight:700;color:var(--acid);letter-spacing:-0.3px}
+.topbar-actions{display:flex;gap:8px}
+
+/* Main scroll area */
 .main{flex:1;overflow-y:auto;display:flex;flex-direction:column;min-width:0}
 
-/* Sidebar */
-.sb-logo{padding:22px 20px 20px;border-bottom:1px solid var(--border)}
-.sb-wordmark{font-size:18px;font-weight:700;letter-spacing:-0.5px;color:var(--acid)}
-.sb-sub{font-size:11px;color:var(--ink3);margin-top:2px}
-.sb-nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:1px}
-.sb-section{font-size:9.5px;font-weight:700;color:var(--ink3);letter-spacing:1.2px;text-transform:uppercase;padding:14px 10px 5px}
-.sb-item{display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:var(--r);cursor:pointer;color:var(--ink2);font-size:13px;transition:all 0.14s;border:none;background:none;width:100%;text-align:left;font-family:inherit}
-.sb-item:hover{background:var(--bg3);color:var(--ink)}
-.sb-item.active{background:var(--bg3);color:var(--acid)}
-.sb-item i{font-size:16px;width:18px;flex-shrink:0}
-.sb-badge{margin-left:auto;background:var(--acid);color:#000;font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px}
-.sb-footer{padding:16px 20px;border-top:1px solid var(--border)}
-.sb-user{display:flex;align-items:center;gap:10px}
-.sb-avatar{width:28px;height:28px;border-radius:50%;background:var(--acid);color:#000;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center}
-.sb-name{font-size:12.5px;color:var(--ink2)}
-
-/* Topbar */
-.topbar{padding:16px 26px;display:flex;align-items:center;gap:14px;border-bottom:1px solid var(--border);background:var(--bg);position:sticky;top:0;z-index:20}
-.topbar-title{font-size:16px;font-weight:600;flex:1;letter-spacing:-0.2px}
+/* Bottom nav */
+.bottom-nav{background:#000;border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));flex-shrink:0}
+.bottom-nav-inner{display:flex;justify-content:space-around}
+.bn-item{display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 20px;cursor:pointer;color:var(--ink3);border:none;background:none;font-family:inherit;transition:color 0.14s;position:relative}
+.bn-item.active{color:var(--acid)}
+.bn-item i{font-size:22px}
+.bn-label{font-size:10px;font-weight:600;letter-spacing:0.2px}
+.bn-badge{position:absolute;top:3px;right:10px;background:var(--acid);color:#000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px}
 
 /* Buttons */
 .btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:var(--r);border:1px solid var(--border2);background:var(--bg2);color:var(--ink);font-size:13px;cursor:pointer;transition:all 0.14s;font-family:inherit;font-weight:500}
-.btn:hover{background:var(--bg3);border-color:rgba(255,255,255,0.2)}
+.btn:hover{background:var(--bg3)}
 .btn-acid{background:var(--acid);border-color:var(--acid);color:#000;font-weight:700}
-.btn-acid:hover{background:#b0d82e;border-color:#b0d82e}
+.btn-acid:hover{background:#b0d82e}
 .btn-sm{padding:5px 11px;font-size:12px}
 
-.content{padding:22px 26px;flex:1}
-
-/* Page hero */
-.page-hero{padding:24px 26px 0}
+/* Content */
+.content{padding:16px 20px;flex:1}
+.page-hero{padding:20px 20px 0}
 .hero-eyebrow{font-size:11px;font-weight:700;color:var(--acid);letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.hero-title{font-size:44px;font-weight:800;letter-spacing:-2px;line-height:0.92;color:var(--ink);margin-bottom:4px}
+.hero-title{font-size:40px;font-weight:800;letter-spacing:-2px;line-height:0.92;margin-bottom:4px}
 .hero-count{font-size:12px;color:var(--ink3);margin-bottom:20px}
 
-/* Phase filter */
+/* Phase tabs */
 .phase-tabs{display:flex;gap:6px;margin-bottom:20px;flex-wrap:wrap}
-.ptab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;letter-spacing:0.3px;font-family:inherit}
-.ptab:hover{border-color:var(--border2);color:var(--ink)}
+.ptab{padding:5px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;font-family:inherit}
 .ptab.active{background:var(--ink);color:#000;border-color:var(--ink)}
 
 /* Trip list */
 .trip-list{display:flex;flex-direction:column}
-.trip-row{display:flex;align-items:center;gap:16px;padding:18px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.14s}
-.trip-row:hover .trip-name{color:var(--acid)}
+.trip-row{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px solid var(--border);cursor:pointer;transition:all 0.14s}
 .trip-row:first-child{border-top:1px solid var(--border)}
-.trip-emoji{font-size:26px;width:38px;flex-shrink:0;text-align:center}
+.trip-row:hover .trip-name{color:var(--acid)}
+.trip-emoji{font-size:26px;width:36px;flex-shrink:0;text-align:center}
 .trip-body{flex:1;min-width:0}
 .trip-name{font-size:22px;font-weight:800;letter-spacing:-0.8px;line-height:1;margin-bottom:3px;transition:color 0.14s}
-.trip-meta{font-size:12px;color:var(--ink3);display:flex;align-items:center;gap:8px}
+.trip-meta{font-size:12px;color:var(--ink3)}
 .trip-prog{margin-top:8px;display:flex;align-items:center;gap:8px}
 .prog-bar{height:2px;background:var(--bg3);border-radius:2px;flex:1;overflow:hidden}
 .prog-fill{height:100%;border-radius:2px}
@@ -96,245 +81,150 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
 .trip-avatars{display:flex}
 .av{width:22px;height:22px;border-radius:50%;font-size:9px;font-weight:700;display:flex;align-items:center;justify-content:center;border:2px solid #000;margin-left:-5px}
 .av:first-child{margin-left:0}
-.av0{background:var(--acid);color:#000}
-.av1{background:var(--orange);color:#fff}
-.av2{background:var(--purple);color:#fff}
-.av3{background:var(--bg3);color:var(--ink2)}
+.av0{background:var(--acid);color:#000}.av1{background:var(--orange);color:#fff}.av2{background:var(--purple);color:#fff}.av3{background:var(--bg3);color:var(--ink2)}
 
 /* Empty */
 .empty{text-align:center;padding:60px 20px;color:var(--ink2)}
 .empty i{font-size:40px;color:var(--ink3);margin-bottom:12px;display:block}
 .empty h3{font-size:15px;font-weight:600;margin-bottom:6px;color:var(--ink)}
-.empty p{font-size:13.5px;line-height:1.6;max-width:260px;margin:0 auto 18px;color:var(--ink2)}
+.empty p{font-size:13.5px;line-height:1.6;max-width:260px;margin:0 auto 18px}
 
 /* Detail */
-.detail-hero{padding:22px 26px 0}
-.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink3);cursor:pointer;margin-bottom:14px;background:none;border:none;font-family:inherit;transition:color 0.14s}
+.detail-hero{padding:16px 20px 0}
+.back-btn{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink3);cursor:pointer;margin-bottom:12px;background:none;border:none;font-family:inherit;transition:color 0.14s}
 .back-btn:hover{color:var(--ink)}
 .detail-eyebrow{font-size:11px;font-weight:700;letter-spacing:1px;margin-bottom:4px}
-.detail-bigname{font-size:52px;font-weight:800;letter-spacing:-2.5px;line-height:0.88;margin-bottom:6px}
-.detail-submeta{font-size:12.5px;color:var(--ink2);margin-bottom:20px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.detail-bigname{font-size:42px;font-weight:800;letter-spacing:-2px;line-height:0.88;margin-bottom:6px}
+.detail-submeta{font-size:12.5px;color:var(--ink2);margin-bottom:16px;display:flex;flex-wrap:wrap;gap:12px}
 .detail-submeta i{font-size:13px;vertical-align:-2px}
-.dtabs{display:flex;border-bottom:1px solid var(--border);padding:0 26px}
-.dtab{padding:10px 16px;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.14s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;letter-spacing:0.3px}
-.dtab:hover{color:var(--ink)}
+.dtabs{display:flex;border-bottom:1px solid var(--border);padding:0 20px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.dtab{padding:10px 14px;font-size:13px;font-weight:600;color:var(--ink3);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all 0.14s;background:none;border-top:none;border-left:none;border-right:none;font-family:inherit;white-space:nowrap}
 .dtab.active{color:var(--acid);border-bottom-color:var(--acid)}
-.dbody{padding:22px 26px}
+.dbody{padding:16px 20px}
 
 /* Itinerary */
 .day-label{font-size:10.5px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;margin-top:24px;display:flex;align-items:center;gap:10px}
 .day-label:first-child{margin-top:0}
 .day-label::after{content:'';flex:1;height:1px;background:var(--border)}
-.ev-row{display:flex;gap:12px;margin-bottom:6px;align-items:stretch}
-.ev-time{width:42px;font-size:11.5px;color:var(--ink3);padding-top:14px;text-align:right;flex-shrink:0;font-weight:600}
+.ev-row{display:flex;gap:10px;margin-bottom:6px;align-items:stretch}
+.ev-time{width:40px;font-size:11px;color:var(--ink3);padding-top:14px;text-align:right;flex-shrink:0;font-weight:600}
 .ev-spine{display:flex;flex-direction:column;align-items:center}
 .ev-dot{width:8px;height:8px;border-radius:50%;border:2px solid var(--acid);background:var(--bg);margin-top:16px;flex-shrink:0}
-.ev-dot.f{background:var(--acid)}
-.ev-dot.next{border-color:var(--purple);background:var(--purple)}
+.ev-dot.f{background:var(--acid)}.ev-dot.next{border-color:var(--purple);background:var(--purple)}
 .ev-connector{width:1px;flex:1;background:var(--border);min-height:10px}
-.ev-card{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:12px 14px;transition:border-color 0.14s}
-.ev-card:hover{border-color:var(--border2)}
-.ev-card.is-past{opacity:0.45}
-.ev-card.is-next{border-color:var(--purple);box-shadow:0 0 0 1px var(--purple)}
-.ev-card.is-active{border-color:var(--acid);box-shadow:0 0 0 1px var(--acid)}
-.ev-top{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:2px}
-.ev-name{font-size:13.5px;font-weight:700;letter-spacing:-0.2px}
-.ev-tbadge{font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;letter-spacing:0.5px;text-transform:uppercase;flex-shrink:0}
-.t-train{background:#1E1B4B;color:#818CF8}
-.t-hotel{background:#052E16;color:#4ADE80}
-.t-activity{background:#431407;color:#FB923C}
-.t-food{background:#451A03;color:#FBBF24}
-.t-flight{background:#0C1A4E;color:#60A5FA}
-.t-vibes{background:#2D1B4E;color:#C084FC}
+.ev-card{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:var(--r);padding:10px 12px;transition:border-color 0.14s}
+.ev-card.is-past{opacity:0.4}.ev-card.is-next{border-color:var(--purple)}.ev-card.is-active{border-color:var(--acid)}
+.ev-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:2px}
+.ev-name{font-size:13px;font-weight:700;letter-spacing:-0.1px;flex:1}
+.ev-tbadge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:4px;letter-spacing:0.4px;text-transform:uppercase;flex-shrink:0;white-space:nowrap}
+.t-train{background:#1E1B4B;color:#818CF8}.t-hotel{background:#052E16;color:#4ADE80}
+.t-activity{background:#431407;color:#FB923C}.t-food{background:#451A03;color:#FBBF24}
+.t-flight{background:#0C1A4E;color:#60A5FA}.t-vibes{background:#2D1B4E;color:#C084FC}
 .t-shopping{background:#1A1A2E;color:#F472B6}
-.ev-note{font-size:12px;color:var(--ink3);margin-top:2px}
-.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ev-note{font-size:11.5px;color:var(--ink3);margin-top:2px}
+.link-btn{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;color:var(--acid);text-decoration:none;margin-top:5px;font-weight:600}
+.sec-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
 .sec-label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px}
 
 /* Checklist */
-.cl-section{margin-bottom:28px}
+.cl-section{margin-bottom:24px}
 .cl-title{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
 .cl-item{display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:var(--r);cursor:pointer;transition:background 0.12s}
 .cl-item:hover{background:var(--bg2)}
 .cl-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--acid);cursor:pointer;flex-shrink:0}
-.cl-item label{font-size:13.5px;cursor:pointer;flex:1;color:var(--ink)}
+.cl-item label{font-size:13.5px;cursor:pointer;flex:1}
 .cl-item.done label{text-decoration:line-through;color:var(--ink3)}
 .add-row{display:flex;gap:8px;margin-top:8px}
 .add-input{flex:1;padding:9px 12px;border-radius:var(--r);border:1px solid var(--border);font-size:13px;font-family:inherit;color:var(--ink);background:var(--bg2);transition:border-color 0.14s}
 .add-input:focus{outline:none;border-color:var(--acid)}
 .add-input::placeholder{color:var(--ink3)}
 
-/* ── LIVE / PÅGÅR TAB ── */
-.live-header{margin-bottom:20px}
-.live-status-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
-.live-pulse{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--acid);text-transform:uppercase;letter-spacing:0.8px}
+/* Live */
+.live-header{margin-bottom:18px}
+.live-pulse{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;color:var(--acid);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:4px}
 .pulse-dot{width:7px;height:7px;border-radius:50%;background:var(--acid);animation:pulse 1.5s infinite}
-@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:0.4;transform:scale(0.8)}}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.3}}
 .live-where{font-size:28px;font-weight:800;letter-spacing:-1px;margin-bottom:2px}
 .live-subtext{font-size:13px;color:var(--ink2)}
-
-/* Next up card */
-.next-up-card{background:var(--bg2);border:1px solid var(--purple);border-radius:var(--r2);padding:18px 20px;margin-bottom:16px;position:relative;overflow:hidden}
+.next-up-card{background:var(--bg2);border:1px solid var(--purple);border-radius:var(--r2);padding:16px 18px;margin-bottom:14px;position:relative;overflow:hidden}
 .next-up-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--purple)}
-.next-up-eyebrow{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
-.next-up-name{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-bottom:3px}
-.next-up-meta{font-size:12.5px;color:var(--ink2)}
-.next-up-time{font-size:32px;font-weight:300;color:var(--purple);margin-top:8px;letter-spacing:-1px}
-
-/* Weather */
-.weather-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 20px;margin-bottom:16px;display:flex;align-items:center;gap:14px}
-.weather-emoji{font-size:32px}
+.next-up-eyebrow{font-size:10px;font-weight:700;color:var(--purple);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px}
+.next-up-name{font-size:17px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
+.next-up-meta{font-size:12px;color:var(--ink2)}
+.next-up-time{font-size:30px;font-weight:300;color:var(--purple);margin-top:6px;letter-spacing:-1px}
+.weather-strip{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:14px 18px;margin-bottom:14px;display:flex;align-items:center;gap:12px}
+.weather-emoji{font-size:30px}
 .weather-info{flex:1}
 .weather-city{font-size:14px;font-weight:700;margin-bottom:1px}
 .weather-desc{font-size:12px;color:var(--ink3)}
-.weather-temp{font-size:32px;font-weight:300;color:var(--acid);letter-spacing:-1px}
-
-/* Timeline mini for live */
-.timeline-label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;margin-top:20px}
+.weather-temp{font-size:30px;font-weight:300;color:var(--acid);letter-spacing:-1px}
+.timeline-label{font-size:10px;font-weight:700;color:var(--ink3);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;margin-top:18px}
 
 /* Reflect */
-.reflect-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:22px}
-.reflect-dest{font-size:13px;font-weight:700;color:var(--acid);margin-bottom:4px;letter-spacing:0.3px}
-.reflect-dates{font-size:12px;color:var(--ink3);margin-bottom:14px}
-.star-row{display:flex;gap:4px;margin-bottom:14px}
-.star{font-size:22px;cursor:pointer;transition:all 0.12s;color:var(--ink3)}
+.reflect-card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px}
+.reflect-dest{font-size:12px;font-weight:700;color:var(--acid);margin-bottom:3px;letter-spacing:0.5px;text-transform:uppercase}
+.reflect-dates{font-size:12px;color:var(--ink3);margin-bottom:12px}
+.star-row{display:flex;gap:4px;margin-bottom:12px}
+.star{font-size:22px;cursor:pointer;color:var(--ink3)}
 .star.lit{color:var(--acid)}
-.star:hover{transform:scale(1.15)}
-.reflect-textarea{width:100%;min-height:110px;padding:12px 14px;border:1px solid var(--border);border-radius:var(--r);font-size:13.5px;font-family:inherit;color:var(--ink);background:var(--bg3);resize:vertical;transition:border-color 0.14s;line-height:1.65}
+.reflect-textarea{width:100%;min-height:110px;padding:12px;border:1px solid var(--border);border-radius:var(--r);font-size:13.5px;font-family:inherit;color:var(--ink);background:var(--bg3);resize:vertical;line-height:1.65}
 .reflect-textarea:focus{outline:none;border-color:var(--acid)}
 .reflect-textarea::placeholder{color:var(--ink3)}
-.locked-box{text-align:center;padding:48px 20px;border:1px solid var(--border);border-radius:var(--r2);background:var(--bg2)}
+.locked-box{text-align:center;padding:40px 20px;border:1px solid var(--border);border-radius:var(--r2);background:var(--bg2)}
 .locked-box i{font-size:36px;color:var(--ink3);display:block;margin-bottom:12px}
-.locked-box p{font-size:13.5px;color:var(--ink2);line-height:1.6;margin-bottom:18px;max-width:260px;margin-left:auto;margin-right:auto}
+.locked-box p{font-size:13.5px;color:var(--ink2);line-height:1.6;margin-bottom:16px;max-width:240px;margin-left:auto;margin-right:auto}
 
 /* Wishlist */
-.wish-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px 20px;margin-bottom:8px;display:flex;gap:14px;align-items:flex-start;transition:border-color 0.14s;position:relative;overflow:hidden}
-.wish-item:hover{border-color:var(--border2)}
+.wish-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:16px 18px;margin-bottom:8px;display:flex;gap:12px;align-items:flex-start;position:relative;overflow:hidden}
 .wish-accent{position:absolute;left:0;top:0;bottom:0;width:3px}
-.wish-emoji{font-size:28px;flex-shrink:0;margin-top:2px}
+.wish-emoji{font-size:26px;flex-shrink:0;margin-top:2px}
 .wish-body{flex:1;min-width:0}
-.wish-place{font-size:18px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
-.wish-why{font-size:13px;color:var(--ink2);margin-bottom:8px;line-height:1.5}
+.wish-place{font-size:17px;font-weight:800;letter-spacing:-0.5px;margin-bottom:2px}
+.wish-why{font-size:13px;color:var(--ink2);margin-bottom:7px;line-height:1.5}
 .wish-tags{display:flex;gap:5px;flex-wrap:wrap}
-.wish-tag{font-size:11px;font-weight:600;padding:3px 9px;border-radius:20px;background:var(--bg3);color:var(--ink3);letter-spacing:0.3px;text-transform:uppercase}
-.wish-cta{flex-shrink:0;margin-top:2px}
+.wish-tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:20px;background:var(--bg3);color:var(--ink3);text-transform:uppercase}
+.wish-cta{flex-shrink:0}
 
 /* Memories */
-.memory-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:20px;margin-bottom:10px}
+.memory-item{background:var(--bg2);border:1px solid var(--border);border-radius:var(--r2);padding:18px;margin-bottom:10px}
 .memory-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px}
-.memory-dest{font-size:18px;font-weight:800;letter-spacing:-0.5px}
+.memory-dest{font-size:17px;font-weight:800;letter-spacing:-0.5px}
 .memory-date{font-size:12px;color:var(--ink3)}
-.memory-stars{font-size:16px;letter-spacing:3px;margin-bottom:8px;color:var(--acid)}
+.memory-stars{font-size:15px;letter-spacing:2px;margin-bottom:8px;color:var(--acid)}
 .memory-text{font-size:13.5px;color:var(--ink2);line-height:1.65}
 
 /* Modal */
 .modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:200;backdrop-filter:blur(4px)}
 .modal-overlay.open{display:flex}
-.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:26px;width:440px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto}
-.modal-title{font-size:16px;font-weight:700;margin-bottom:20px}
-.form-group{margin-bottom:14px}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:var(--r2);padding:24px;width:440px;max-width:calc(100vw - 32px);max-height:90vh;overflow-y:auto}
+.modal-title{font-size:16px;font-weight:700;margin-bottom:18px}
+.form-group{margin-bottom:13px}
 .form-label{font-size:10.5px;font-weight:700;color:var(--ink3);margin-bottom:5px;display:block;text-transform:uppercase;letter-spacing:0.6px}
 .form-input{width:100%;padding:9px 12px;border-radius:var(--r);border:1px solid var(--border);font-size:13.5px;font-family:inherit;color:var(--ink);background:var(--bg3);transition:border-color 0.14s}
 .form-input:focus{outline:none;border-color:var(--acid)}
 .form-input::placeholder{color:var(--ink3)}
 .form-row{display:flex;gap:10px}
 .form-row .form-group{flex:1}
-.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:22px;padding-top:18px;border-top:1px solid var(--border)}
+.modal-footer{display:flex;gap:8px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid var(--border)}
 .opt-pills{display:flex;gap:6px;flex-wrap:wrap}
-.opt-pill{padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;font-family:inherit}
-.opt-pill:hover{border-color:var(--border2);color:var(--ink)}
+.opt-pill{padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:none;color:var(--ink3);transition:all 0.14s;font-family:inherit}
 .opt-pill.sel{background:var(--ink);color:#000;border-color:var(--ink)}
 
-/* Link button */
-.link-btn{display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--acid);text-decoration:none;margin-top:6px;font-weight:600}
-.link-btn:hover{text-decoration:underline}
-
 .hidden{display:none!important}
-
-/* ── Mobile responsive ── */
-.mobile-topbar{display:flex;padding:14px 18px;background:#000;border-bottom:1px solid rgba(255,255,255,0.07);align-items:center;justify-content:space-between;position:sticky;top:0;z-index:30}
-.mobile-wordmark{font-size:17px;font-weight:700;color:#C8F135;letter-spacing:-0.3px}
-.hamburger{background:none;border:none;color:#888;cursor:pointer;padding:4px;display:flex;align-items:center}
-.hamburger i{font-size:24px}
-.drawer-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,0.65);z-index:40}
-.drawer-overlay.open{display:block}
-.drawer{position:fixed;top:0;left:0;bottom:0;width:260px;max-width:320px;background:#000;border-right:1px solid rgba(255,255,255,0.12);z-index:50;transform:translateX(-100%);transition:transform 0.22s ease;display:flex;flex-direction:column}
-.drawer.open{transform:translateX(0)}
-.drawer-logo{padding:22px 20px 20px;border-bottom:1px solid rgba(255,255,255,0.07);display:flex;align-items:center;justify-content:space-between}
-.drawer-close{background:none;border:none;color:#555;cursor:pointer;padding:4px}
-.drawer-close i{font-size:20px}
-.drawer-nav{padding:12px 10px;flex:1;display:flex;flex-direction:column;gap:1px}
-.bottom-nav{display:block;background:#000;border-top:1px solid rgba(255,255,255,0.07);padding:6px 0 max(6px,env(safe-area-inset-bottom));position:sticky;bottom:0;z-index:30;flex-shrink:0}
-.bottom-nav-inner{display:flex;justify-content:space-around}
-.bn-item{display:flex;flex-direction:column;align-items:center;gap:2px;padding:6px 18px;cursor:pointer;color:#555;border:none;background:none;font-family:inherit;transition:color 0.14s;position:relative}
-.bn-item.active{color:#C8F135}
-.bn-item i{font-size:22px}
-.bn-label{font-size:10px;font-weight:600;letter-spacing:0.2px}
-.bn-badge{position:absolute;top:3px;right:8px;background:#C8F135;color:#000;font-size:9px;font-weight:700;padding:1px 5px;border-radius:20px}
-@media(max-width:620px){
-  .sidebar{display:none!important}
-  .bottom-nav{display:block}
-  .content{padding:16px 18px}
-  .page-hero{padding:16px 18px 0}
-  .hero-title{font-size:34px;letter-spacing:-1.5px}
-  .detail-hero{padding:16px 18px 0}
-  .detail-bigname{font-size:38px;letter-spacing:-1.5px}
-  .dtabs{padding:0 18px;overflow-x:auto;-webkit-overflow-scrolling:touch}
-  .dbody{padding:16px 18px}
-  .dtab{padding:10px 12px;font-size:12.5px}
-}
 </style>
 </head>
 <body>
 <div class="app">
 
-  <nav class="sidebar">
-    <div class="sb-logo">
-      <div class="sb-wordmark">WANDR</div>
-      <div class="sb-sub">din resekompass</div>
-    </div>
-    <div class="sb-nav">
-      <div class="sb-section">Resor</div>
-      <button class="sb-item active" onclick="showView('trips')" id="nav-trips"><i class="ti ti-map-2"></i>Alla resor</button>
-      <button class="sb-item" onclick="showView('wishlist')" id="nav-wishlist"><i class="ti ti-heart"></i>Önskelista<span class="sb-badge" id="wish-badge">3</span></button>
-      <div class="sb-section">Minnen</div>
-      <button class="sb-item" onclick="showView('memories')" id="nav-memories"><i class="ti ti-notebook"></i>Reflektioner</button>
-    </div>
-    <div class="sb-footer">
-      <div class="sb-user">
-        <div class="sb-avatar">J</div>
-        <div class="sb-name">Mitt konto</div>
-      </div>
-    </div>
-  </nav>
-
-
-  <!-- Mobile topbar -->
-  <div class="mobile-topbar">
-    <div class="mobile-wordmark">WANDR</div>
-    <button class="hamburger" onclick="openDrawer()"><i class="ti ti-menu-2"></i></button>
-  </div>
-
-  <!-- Drawer overlay -->
-  <div class="drawer-overlay" id="drawer-overlay" onclick="closeDrawer()"></div>
-
-  <!-- Drawer -->
-  <div class="drawer" id="drawer">
-    <div class="drawer-logo">
-      <div>
-        <div class="sb-wordmark">WANDR</div>
-        <div class="sb-sub">din resekompass</div>
-      </div>
-      <button class="drawer-close" onclick="closeDrawer()"><i class="ti ti-x"></i></button>
-    </div>
-    <div class="drawer-nav">
-      <div class="sb-section">Resor</div>
-      <button class="sb-item active" onclick="showView('trips');closeDrawer()" id="dnav-trips"><i class="ti ti-map-2"></i>Alla resor</button>
-      <button class="sb-item" onclick="showView('wishlist');closeDrawer()" id="dnav-wishlist"><i class="ti ti-heart"></i>Önskelista<span class="sb-badge" id="dwish-badge">3</span></button>
-      <div class="sb-section">Minnen</div>
-      <button class="sb-item" onclick="showView('memories');closeDrawer()" id="dnav-memories"><i class="ti ti-notebook"></i>Reflektioner</button>
+  <!-- Top bar -->
+  <div class="topbar">
+    <div class="topbar-wordmark">WANDR</div>
+    <div class="topbar-actions">
+      <button class="btn btn-acid btn-sm" id="topbar-add-btn" onclick="openModal('trip')"><i class="ti ti-plus"></i> Ny resa</button>
     </div>
   </div>
+
+  <!-- Main scroll area -->
   <div class="main" id="main">
 
     <!-- TRIPS -->
@@ -353,9 +243,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
           <button class="ptab" onclick="filterTrips('past',this)">Avklarade</button>
         </div>
         <div class="trip-list" id="trips-list"></div>
-        <div style="margin-top:24px">
-          <button class="btn btn-acid" onclick="openModal('trip')"><i class="ti ti-plus"></i> Ny resa</button>
-        </div>
       </div>
     </div>
 
@@ -424,35 +311,29 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
             </div>
           </div>
         </div>
-        <div id="tab-live" class="hidden">
-          <div id="live-content"></div>
-        </div>
-        <div id="tab-reflect" class="hidden">
-          <div id="reflect-area"></div>
-        </div>
+        <div id="tab-live" class="hidden"><div id="live-content"></div></div>
+        <div id="tab-reflect" class="hidden"><div id="reflect-area"></div></div>
       </div>
     </div>
 
+  </div>
 
-  <!-- Bottom nav (mobile) -->
+  <!-- Bottom nav -->
   <div class="bottom-nav">
     <div class="bottom-nav-inner">
       <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
-        <i class="ti ti-map-2"></i>
-        <span class="bn-label">Resor</span>
+        <i class="ti ti-map-2"></i><span class="bn-label">Resor</span>
       </button>
       <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
-        <i class="ti ti-heart"></i>
-        <span class="bn-label">Önskelista</span>
-        <span class="bn-badge" id="bwish-badge">3</span>
+        <i class="ti ti-heart"></i><span class="bn-label">Önskelista</span>
+        <span class="bn-badge" id="wish-badge">3</span>
       </button>
       <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
-        <i class="ti ti-notebook"></i>
-        <span class="bn-label">Minnen</span>
+        <i class="ti ti-notebook"></i><span class="bn-label">Minnen</span>
       </button>
     </div>
   </div>
-  </div>
+
 </div>
 
 <!-- MODAL: Trip -->
@@ -477,25 +358,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       <button class="btn" onclick="closeModal('trip')">Avbryt</button>
       <button class="btn btn-acid" onclick="saveTrip()">Skapa resa</button>
     </div>
-
-  <!-- Bottom nav (mobile) -->
-  <div class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
-        <i class="ti ti-map-2"></i>
-        <span class="bn-label">Resor</span>
-      </button>
-      <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
-        <i class="ti ti-heart"></i>
-        <span class="bn-label">Önskelista</span>
-        <span class="bn-badge" id="bwish-badge">3</span>
-      </button>
-      <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
-        <i class="ti ti-notebook"></i>
-        <span class="bn-label">Minnen</span>
-      </button>
-    </div>
-  </div>
   </div>
 </div>
 
@@ -525,25 +387,6 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
       <button class="btn" onclick="closeModal('event')">Avbryt</button>
       <button class="btn btn-acid" onclick="saveEvent()">Lägg till</button>
     </div>
-
-  <!-- Bottom nav (mobile) -->
-  <div class="bottom-nav">
-    <div class="bottom-nav-inner">
-      <button class="bn-item active" onclick="showView('trips')" id="bnav-trips">
-        <i class="ti ti-map-2"></i>
-        <span class="bn-label">Resor</span>
-      </button>
-      <button class="bn-item" onclick="showView('wishlist')" id="bnav-wishlist">
-        <i class="ti ti-heart"></i>
-        <span class="bn-label">Önskelista</span>
-        <span class="bn-badge" id="bwish-badge">3</span>
-      </button>
-      <button class="bn-item" onclick="showView('memories')" id="bnav-memories">
-        <i class="ti ti-notebook"></i>
-        <span class="bn-label">Minnen</span>
-      </button>
-    </div>
-  </div>
   </div>
 </div>
 
@@ -560,6 +403,7 @@ html,body{height:100%;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sy
     </div>
   </div>
 </div>
+
 
 <script>
 const MONTHS=['jan','feb','mar','apr','maj','jun','jul','aug','sep','okt','nov','dec'];
@@ -637,7 +481,6 @@ function showView(v){
   ['trips','wishlist','memories','detail'].forEach(x=>document.getElementById('view-'+x).classList.toggle('hidden',x!==v));
   ['trips','wishlist','memories'].forEach(x=>{
     document.getElementById('nav-'+x)?.classList.toggle('active',x===v);
-    document.getElementById('dnav-'+x)?.classList.toggle('active',x===v);
     document.getElementById('bnav-'+x)?.classList.toggle('active',x===v && v!=='detail');
   });
   if(v==='trips')renderTrips();
@@ -883,7 +726,7 @@ function setRating(n){S.currentTrip.rating=n;renderReflect();}
 function markPast(){S.currentTrip.phase='past';S.currentTrip.progress=100;renderReflect();}
 
 function renderWishlist(){
-  ['wish-badge','dwish-badge','bwish-badge'].forEach(id=>{const el=document.getElementById(id);if(el)el.textContent=S.wishes.length;});
+  const wb=document.getElementById('wish-badge');if(wb)wb.textContent=S.wishes.length;;
   document.getElementById('wish-hero-count').textContent=`${S.wishes.length} resmål`;
   const el=document.getElementById('wish-list');
   if(!S.wishes.length){el.innerHTML=`<div class="empty"><i class="ti ti-heart-off"></i><h3>Önskelistan är tom</h3></div>`;return;}
@@ -968,14 +811,7 @@ function saveWish(){
 }
 
 
-function openDrawer(){
-  document.getElementById("drawer").classList.add("open");
-  document.getElementById("drawer-overlay").classList.add("open");
-}
-function closeDrawer(){
-  document.getElementById("drawer").classList.remove("open");
-  document.getElementById("drawer-overlay").classList.remove("open");
-}
+
 
 renderTrips();
 
